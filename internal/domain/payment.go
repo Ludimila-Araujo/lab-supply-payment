@@ -25,6 +25,10 @@ type Payment struct {
 
 func NewPayment(orderID uuid.UUID, amount float64) (*Payment, error) {
 
+	if amount <= 0 {
+		return nil, ErrPaymentInvalidAmount
+	}
+
 	now := time.Now()
 
 	return &Payment{
@@ -35,4 +39,32 @@ func NewPayment(orderID uuid.UUID, amount float64) (*Payment, error) {
 		CreatedAt: now,
 		UpdatedAt: now,
 	}, nil
+}
+
+//pedido aprovado:
+
+func (p *Payment) Approve() error {
+
+	if p.Status != PaymentStatusPending {
+		return ErrPaymentInvalidStatus
+	}
+
+	p.Status = PaymentStatusApproved
+	p.UpdatedAt = time.Now()
+
+	return nil
+}
+
+//pedido negado:
+
+func (p *Payment) Fail() error {
+
+	if p.Status != PaymentStatusPending {
+		return ErrPaymentInvalidStatus
+	}
+
+	p.Status = PaymentStatusFailed
+	p.UpdatedAt = time.Now()
+
+	return nil
 }
