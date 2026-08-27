@@ -4,6 +4,8 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/Ludimila-Araujo/labsupply-payment/internal/messaging"
+
 	"github.com/Ludimila-Araujo/labsupply-payment/internal/config"
 	"github.com/Ludimila-Araujo/labsupply-payment/internal/controllers"
 	"github.com/Ludimila-Araujo/labsupply-payment/internal/database"
@@ -28,6 +30,26 @@ func main() {
 	paymentService := service.NewPaymentService(
 		paymentRepository,
 	)
+
+	rabbitMQ, err := messaging.NewRabbitMQ(cfg.RabbitMQURL)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	defer rabbitMQ.Close()
+
+	if err := rabbitMQ.DeclarePaymentQueue(); err != nil {
+		log.Fatal(err)
+	}
+
+	messages, err := rabbitMQ.ConsumePayments()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	paymentConsumer := messaging.NewPaymentConsumer(paymentService)
+
+	go paymentConsumer.Start(messages)
 
 	paymentController := controllers.NewPaymentController(
 		paymentService,
