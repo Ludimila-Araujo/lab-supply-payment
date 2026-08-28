@@ -47,7 +47,10 @@ func main() {
 		log.Fatal(err)
 	}
 
-	paymentConsumer := messaging.NewPaymentConsumer(paymentService)
+	paymentConsumer := messaging.NewPaymentConsumer(
+		paymentService,
+		rabbitMQ,
+	)
 
 	go paymentConsumer.Start(messages)
 

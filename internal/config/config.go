@@ -13,11 +13,21 @@ type Config struct {
 
 func Load() Config {
 	return Config{
-		DBHost:      os.Getenv("DB_HOST"),
-		DBPort:      os.Getenv("DB_PORT"),
-		DBUser:      os.Getenv("DB_USER"),
-		DBPassword:  os.Getenv("DB_PASSWORD"),
-		DBName:      os.Getenv("DB_NAME"),
-		RabbitMQURL: os.Getenv("RABBITMQ_URL"),
+		DBHost:      getEnv("DB_HOST", "localhost"),
+		DBPort:      getEnv("DB_PORT", "5432"),
+		DBUser:      getEnv("DB_USER", "postgres"),
+		DBPassword:  getEnv("DB_PASSWORD", ""),
+		DBName:      getEnv("DB_NAME", "lab_supply_payment"),
+		RabbitMQURL: getEnv("RABBITMQ_URL", "amqp://guest:guest@localhost:5672/"),
 	}
+}
+
+func getEnv(key, defaultValue string) string {
+	value := os.Getenv(key)
+
+	if value == "" {
+		return defaultValue
+	}
+
+	return value
 }
