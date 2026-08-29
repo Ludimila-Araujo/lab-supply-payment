@@ -64,6 +64,13 @@ func (c *PaymentConsumer) Start(
 				)
 			}
 
+			if err := msg.Ack(false); err != nil {
+				log.Printf(
+					"failed to acknowledge payment message: %v",
+					err,
+				)
+			}
+
 			continue
 		}
 
@@ -85,5 +92,12 @@ func (c *PaymentConsumer) Start(
 			"payment created for order %s",
 			event.OrderID,
 		)
+
+		if err := msg.Ack(false); err != nil {
+			log.Printf(
+				"failed to acknowledge payment message: %v",
+				err,
+			)
+		}
 	}
 }
