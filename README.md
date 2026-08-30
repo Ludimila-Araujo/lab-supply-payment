@@ -39,8 +39,9 @@ Repository
     │
     ▼
 PostgreSQL
+```
 
-###Principais responsabilidades:
+### Principais responsabilidades:
 
 - **Consumer**: recebe e interpreta os eventos de pagamento.
 - **Service**: executa o caso de uso e coordena as regras de negócio.
@@ -70,6 +71,7 @@ labsupply-payment
       ├── payment.approved
       │
       └── payment.failed
+```
 
 ## 💳 Estados do pagamento
 
@@ -97,6 +99,7 @@ internal/
 ├── repository/
 ├── routes/
 └── service/
+```
 
 ## 📦 Funcionalidades
 
@@ -121,6 +124,7 @@ DB_PASSWORD=sua_senha
 DB_NAME=labsupply_payment
 
 RABBITMQ_URL=amqp://guest:guest@localhost:5672/
+```
 
 Não versione o .env com credenciais reais. Utilize o .env.example como referência.
 
@@ -136,6 +140,7 @@ Na raiz do projeto:
 
 ```bash
 go run ./cmd/api
+```
 
 O serviço estará disponível na porta 8081.
 
@@ -143,27 +148,30 @@ O serviço estará disponível na porta 8081.
 
 Para testar o fluxo completo, execute também o labsupply-api em outro terminal:
 
+```bash
 go run ./cmd/app
+```
 
 A API principal utiliza a porta 8080.
 
 Os dois serviços devem estar conectados ao mesmo RabbitMQ.
 
-🧪 Validação
+## 🧪 Validação
 
 O serviço foi validado com:
-
+```bash
 go test ./...
 go vet ./...
 go build ./...
+```
 
 Também foram realizados testes de integração envolvendo o processamento de pagamentos, publicação dos eventos payment.approved e payment.failed, atualização dos pedidos e confirmação das mensagens através de ACK.
 
-🔗 Projeto principal
+## 🔗 Projeto principal
 
 Este microsserviço faz parte do projeto Lab Supply e se comunica com a API principal:
 
-labsupply-api
+`https://github.com/Ludimila-Araujo/lab-supply-api`
 
 ## 👩‍💻 Autora
 
